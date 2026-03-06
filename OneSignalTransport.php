@@ -67,6 +67,9 @@ final class OneSignalTransport extends AbstractTransport
         }
 
         $recipientId = $message->getRecipientId() ?? $this->defaultRecipientId;
+        if(!is_array($recipientId)) {
+            $recipientId = [$recipientId];
+        }
 
         if (null === $recipientId) {
             throw new LogicException(\sprintf('The "%s" transport should have configured `defaultRecipientId` via DSN or provided with message options.', __CLASS__));
@@ -76,12 +79,12 @@ final class OneSignalTransport extends AbstractTransport
         $options['app_id'] = $this->appId;
         if ($options['is_external_user_id'] ?? false) {
             $options['include_aliases'] = [
-                'external_id' => [$recipientId],
+                'external_id' => $recipientId,
             ];
             $options['target_channel'] = 'push';
             unset($options['is_external_user_id']);
         } else {
-            $options['include_subscription_ids'] = [$recipientId];
+            $options['include_subscription_ids'] = $recipientId;
         }
         $options['headings'] ??= ['en' => $message->getSubject()];
         $options['contents'] ??= ['en' => $message->getContent()];

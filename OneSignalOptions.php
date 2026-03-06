@@ -99,7 +99,7 @@ final class OneSignalOptions implements MessageOptionsInterface
     /**
      * @return $this
      */
-    public function recipient(string $id): static
+    public function recipient(string|array $id): static
     {
         $this->options['recipient_id'] = $id;
 
@@ -124,7 +124,7 @@ final class OneSignalOptions implements MessageOptionsInterface
         return $this;
     }
 
-    public function getRecipientId(): ?string
+    public function getRecipientId(): string|array|null
     {
         return $this->options['recipient_id'] ?? null;
     }
